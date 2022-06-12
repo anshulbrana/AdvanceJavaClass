@@ -1,9 +1,12 @@
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
+import datamodel.Passenger;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.net.InetSocketAddress;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -35,7 +38,11 @@ public class TestHTTPService {
 
                 //To print something on webpage from this server
 
-                String response = "Got something from server";
+                Passenger passenger = new Passenger("test", 22, 10, true, 1 );
+
+                ObjectMapper mapper = new ObjectMapper();
+
+                String response = mapper.writeValueAsString(passenger);
 
                 byte[] bytes = response.getBytes(StandardCharsets.UTF_8);
                 exchange.sendResponseHeaders(200, bytes.length);
