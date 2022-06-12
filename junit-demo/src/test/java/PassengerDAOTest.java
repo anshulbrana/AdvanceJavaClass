@@ -1,10 +1,18 @@
 import datamodel.Passenger;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import services.PassengerDAO;
 
 import java.sql.*;
 
 public class PassengerDAOTest {
+
+    //static because It will be executed before everything
+    static {
+        System.setProperty("conf.file","src/test/resources/conf.properties");
+    }
+
     private Connection cnt;
 
     //TO not repeat the connection every time we need it
@@ -18,11 +26,12 @@ public class PassengerDAOTest {
     }
 
     @Test
+    @DisplayName("When passenger is inserted with valid name, it should be found")
     public void test() throws SQLException {
 
         //given
 
-        Passenger passenger = new  Passenger("test", 30, 3, true, 1);
+        Passenger passenger = new Passenger("test", 30, 3, true, 1);
 
         //When
         PassengerDAO dao = new PassengerDAO();
@@ -34,11 +43,11 @@ public class PassengerDAOTest {
         ResultSet resultSet = connection.prepareStatement("select * from passengers where name = 'test'").executeQuery();
         String retrievedName = null;
 
-        while (resultSet.next()){
+        while (resultSet.next()) {
             retrievedName = resultSet.getString("name");
         }
 
-        if(retrievedName == null){
+        if (retrievedName == null) {
             throw new RuntimeException("Name test was not found, expected to be not null");
         }
     }
